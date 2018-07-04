@@ -1,0 +1,76 @@
+Laravel REST API example
+
+composer create-project --prefer-dist laravel/laravel myapp
+cd myapp
+php artisan serve
+open http://127.0.0.1:8000
+touch database/database.sqlite
+
+.env:
+
+DB_CONNECTION=sqlite
+DB_DATABASE=/Users/rafaela/Documents/Laravel/myapp/database/database.sqlite
+
+php artisan make:model Person -m
+
+Add to the generated file’s up function:
+
+$table->string('firstname');
+
+Edit the model: Person.php
+
+
+protected $fillable = [ 'firstname' ];
+
+
+php artisan make:seeder PeopleTableSeeder
+
+Edit the seeder:
+use App\Person;
+
+
+Person::truncate();
+
+        $faker = \Faker\Factory::create();
+
+        for($i = 0; $i < 2; $i++){
+          Person::create([
+            'firstname' => $faker->name,
+          ]);
+        }
+
+php artisan db:seed --class=PeopleTableSeeder
+
+Edit api.php
+
+use App\Person;
+
+Route::get('people', function() {
+    // If the Content-Type and Accept headers are set to 'application/json',
+    // this will return a JSON structure. This will be cleaned up later.
+    return Person::all();
+});
+
+Route::get('people/{id}', function($id) {
+    return Person::find($id);
+});
+
+Route::post('people', function(Request $request) {
+    return Person::create($request->all);
+});
+
+Route::put('people/{id}', function(Request $request, $id) {
+    $person = Person::findOrFail($id);
+    $person->update($request->all());
+
+    return $person;
+});
+
+Route::delete('people/{id}', function($id) {
+    Person::find($id)->delete();
+
+    return 204;
+});
+
+
+open http://127.0.0.1:8000/api/people

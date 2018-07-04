@@ -22,6 +22,7 @@ Edit the model: Person.php
 
 protected $fillable = [ 'firstname' ];
 
+php artisan migrate
 
 php artisan make:seeder PeopleTableSeeder
 

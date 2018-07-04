@@ -30,7 +30,7 @@ Route::get('people/{id}', function($id) {
 });
 
 Route::post('people', function(Request $request) {
-    return Person::create($request->all);
+    return Person::create($request->all());
 });
 
 Route::put('people/{id}', function(Request $request, $id) {
